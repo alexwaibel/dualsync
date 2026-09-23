@@ -26,7 +26,7 @@ else()
     include(CTest)
     add_subdirectory(core/tests)
 
-    find_program(CLANG_FORMAT_EXECUTABLE NAMES clang-format REQUIRED)
+    find_program(CLANG_FORMAT_EXECUTABLE NAMES clang-format-16 clang-format REQUIRED)
     find_program(CPPCHECK_EXECUTABLE NAMES cppcheck REQUIRED)
 
     set(DUALSYNC_C_SOURCES

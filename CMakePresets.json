@@ -13,7 +13,7 @@
       "binaryDir": "${sourceDir}/build/obj/host",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_C_COMPILER": "clang-16",
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "DUALSYNC_ENABLE_SANITIZERS": true
       }
