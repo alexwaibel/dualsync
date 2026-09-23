@@ -66,11 +66,31 @@ handoff can be evaluated later.
 ### Initial target
 
 - Nintendo DSi or DSi XL.
-- DSi mode, to access the additional RAM and faster CPU.
+- A DS-compatible `.nds` launched in DSi mode to access the additional RAM,
+  faster CPU, and WPA2 networking.
 - TWiLight Menu++ and nds-bootstrap.
 - SD card storage exposed through libfat/DLDI-compatible filesystem APIs.
 - RomM 5.3.0 or newer for the initial compatibility baseline.
 - HTTPS with a publicly trusted certificate for the primary development server.
+
+### Deferred DS-mode compatibility
+
+The same binary may eventually offer a constrained compatibility mode when
+launched in DS mode. This is not an MVP requirement and must not compromise the
+DSi implementation.
+
+Expected DS-mode limitations:
+
+- Approximately 4 MiB RAM instead of 16 MiB.
+- Lower CPU speed.
+- Open or WEP Wi-Fi rather than WPA/WPA2.
+- Plain HTTP may be required if verified TLS cannot fit reliably.
+- Smaller request pages and transfer buffers.
+- DLDI-compatible flashcart or loader storage on original DS hardware.
+
+The client should detect `isDSiMode()` at startup. Until DS-mode networking and
+memory use are validated on hardware, it should explain that DSi mode is
+required rather than attempting an unreliable session.
 
 ### Future target
 
@@ -90,7 +110,8 @@ handoff can be evaluated later.
 - A small C JSON parser with bounded allocations, initially cJSON unless
   measurement shows that a streaming parser is necessary.
 - libctru and native `httpc`/`sslc` services for the later 3DS platform layer.
-- Target-specific Docker images, orchestrated by a top-level Makefile.
+- Target-specific Docker images, orchestrated by Docker Compose and CMake
+  presets.
 
 Final dependencies must remain replaceable behind narrow interfaces.
 
@@ -104,10 +125,10 @@ core/
 apps/
   dsi/
     source/
-    Makefile
+    CMakeLists.txt
   3ds/
     source/
-    Makefile
+    CMakeLists.txt
 containers/
   dsi/
     Dockerfile
@@ -116,7 +137,11 @@ containers/
 build/
   obj/
   dist/
-Makefile
+CMakeLists.txt
+CMakePresets.json
+compose.yaml
+scripts/
+  dualsync
 ```
 
 The shared core owns protocol state machines and data rules. Platform code owns

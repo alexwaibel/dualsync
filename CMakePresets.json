@@ -1,0 +1,118 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "host",
+      "displayName": "Host tests and tooling",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/obj/host",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "DUALSYNC_ENABLE_SANITIZERS": true
+      }
+    },
+    {
+      "name": "dsi",
+      "displayName": "Nintendo DSi",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/obj/dsi",
+      "toolchainFile": "$env{BLOCKSDS}/cmake/BlocksDS.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "NDS_ARCH_THUMB": true
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "host",
+      "configurePreset": "host"
+    },
+    {
+      "name": "host-check",
+      "configurePreset": "host",
+      "targets": [
+        "format-check",
+        "lint",
+        "dualsync_core_tests"
+      ]
+    },
+    {
+      "name": "host-format",
+      "configurePreset": "host",
+      "targets": [
+        "format"
+      ]
+    },
+    {
+      "name": "host-format-check",
+      "configurePreset": "host",
+      "targets": [
+        "format-check"
+      ]
+    },
+    {
+      "name": "host-lint",
+      "configurePreset": "host",
+      "targets": [
+        "lint"
+      ]
+    },
+    {
+      "name": "dsi",
+      "configurePreset": "dsi",
+      "targets": [
+        "dualsync_dsi_dist"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "host",
+      "configurePreset": "host",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "host-check",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "host"
+        },
+        {
+          "type": "build",
+          "name": "host-check"
+        },
+        {
+          "type": "test",
+          "name": "host"
+        }
+      ]
+    },
+    {
+      "name": "dsi",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "dsi"
+        },
+        {
+          "type": "build",
+          "name": "dsi"
+        }
+      ]
+    }
+  ]
+}

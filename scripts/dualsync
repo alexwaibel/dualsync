@@ -1,0 +1,59 @@
+#!/bin/sh
+
+set -eu
+
+PROJECT_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export DUALSYNC_UID
+export DUALSYNC_GID
+DUALSYNC_UID=$(id -u)
+DUALSYNC_GID=$(id -g)
+
+compose()
+{
+    docker compose --project-directory "$PROJECT_ROOT" -f "$PROJECT_ROOT/compose.yaml" "$@"
+}
+
+run_tools()
+{
+    compose run --rm --build tools "$@"
+}
+
+run_dsi()
+{
+    compose run --rm --build dsi "$@"
+}
+
+command=${1:-}
+
+case "$command" in
+    check)
+        run_tools cmake --workflow --preset host-check
+        run_dsi cmake --workflow --preset dsi
+        ;;
+    clean)
+        rm -rf "$PROJECT_ROOT/build"
+        ;;
+    dsi)
+        run_dsi cmake --workflow --preset dsi
+        ;;
+    format)
+        run_tools cmake --preset host
+        run_tools cmake --build --preset host-format
+        ;;
+    format-check)
+        run_tools cmake --preset host
+        run_tools cmake --build --preset host-format-check
+        ;;
+    lint)
+        run_tools cmake --preset host
+        run_tools cmake --build --preset host-lint
+        ;;
+    test)
+        run_tools cmake --workflow --preset host-check
+        ;;
+    *)
+        echo "Usage: $0 {check|clean|dsi|format|format-check|lint|test}" >&2
+        exit 2
+        ;;
+esac
+

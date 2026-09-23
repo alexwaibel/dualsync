@@ -1,0 +1,23 @@
+services:
+  dsi:
+    build:
+      context: .
+      dockerfile: containers/dsi/Dockerfile
+    image: dualsync-dsi-dev
+    init: true
+    user: "${DUALSYNC_UID:-1000}:${DUALSYNC_GID:-1000}"
+    volumes:
+      - .:/work
+    working_dir: /work
+
+  tools:
+    build:
+      context: .
+      dockerfile: containers/tools/Dockerfile
+    image: dualsync-tools-dev
+    init: true
+    user: "${DUALSYNC_UID:-1000}:${DUALSYNC_GID:-1000}"
+    volumes:
+      - .:/work
+    working_dir: /work
+
