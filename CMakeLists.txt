@@ -27,11 +27,17 @@ else()
     add_subdirectory(core/tests)
 
     find_program(CLANG_FORMAT_EXECUTABLE NAMES clang-format-16 clang-format REQUIRED)
+    find_program(CLANG_TIDY_EXECUTABLE NAMES clang-tidy-16 clang-tidy REQUIRED)
     find_program(CPPCHECK_EXECUTABLE NAMES cppcheck REQUIRED)
 
     set(DUALSYNC_C_SOURCES
         apps/dsi/source/main.c
         core/include/dualsync/version.h
+        core/source/version.c
+        core/tests/test_version.c
+    )
+
+    set(DUALSYNC_HOST_C_SOURCES
         core/source/version.c
         core/tests/test_version.c
     )
@@ -67,6 +73,19 @@ else()
             core/tests
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         COMMENT "Running static analysis"
+        VERBATIM
+    )
+
+    add_custom_target(
+        tidy
+        COMMAND
+            "${CLANG_TIDY_EXECUTABLE}"
+            --quiet
+            -p
+            "${CMAKE_BINARY_DIR}"
+            ${DUALSYNC_HOST_C_SOURCES}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMENT "Running clang-tidy"
         VERBATIM
     )
 endif()

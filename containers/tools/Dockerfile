@@ -4,6 +4,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         clang-16 \
         clang-format-16 \
+        clang-tidy-16 \
         cmake \
         cppcheck \
         libc6-dev \

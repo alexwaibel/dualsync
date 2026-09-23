@@ -42,6 +42,7 @@
       "targets": [
         "format-check",
         "lint",
+        "tidy",
         "dualsync_core_tests"
       ]
     },
@@ -64,6 +65,13 @@
       "configurePreset": "host",
       "targets": [
         "lint"
+      ]
+    },
+    {
+      "name": "host-tidy",
+      "configurePreset": "host",
+      "targets": [
+        "tidy"
       ]
     },
     {

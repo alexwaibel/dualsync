@@ -48,11 +48,19 @@ case "$command" in
         run_tools cmake --preset host
         run_tools cmake --build --preset host-lint
         ;;
+    install-hooks)
+        git -C "$PROJECT_ROOT" config core.hooksPath .githooks
+        echo "Configured Git hooks from .githooks"
+        ;;
     test)
         run_tools cmake --workflow --preset host-check
         ;;
+    tidy)
+        run_tools cmake --preset host
+        run_tools cmake --build --preset host-tidy
+        ;;
     *)
-        echo "Usage: $0 {check|clean|dsi|format|format-check|lint|test}" >&2
+        echo "Usage: $0 {check|clean|dsi|format|format-check|install-hooks|lint|test|tidy}" >&2
         exit 2
         ;;
 esac

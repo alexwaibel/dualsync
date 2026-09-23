@@ -47,6 +47,7 @@ braces, and a 100-column limit.
 ./scripts/dualsync format
 ./scripts/dualsync format-check
 ./scripts/dualsync lint
+./scripts/dualsync tidy
 ./scripts/dualsync test
 ./scripts/dualsync check
 ```
@@ -54,3 +55,12 @@ braces, and a 100-column limit.
 These commands run through project containers and do not require host-installed
 C development tools. CMake is the sole build definition; Docker Compose selects
 the appropriate host or console toolchain.
+
+To enable the repository's pre-commit formatting check for the current clone:
+
+```bash
+./scripts/dualsync install-hooks
+```
+
+The hook checks formatting without modifying staged files. Git hooks can be
+bypassed, so CI runs the complete check independently.
