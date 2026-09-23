@@ -1,0 +1,6 @@
+.git
+/build
+**/*.nds
+**/*.elf
+**/*.map
+**/*.o

@@ -1,0 +1,12 @@
+#include "dualsync/version.h"
+
+#define DUALSYNC_STRINGIFY_VALUE(value) #value
+#define DUALSYNC_STRINGIFY(value) DUALSYNC_STRINGIFY_VALUE(value)
+
+const char *dualsync_version(void)
+{
+    return DUALSYNC_STRINGIFY(DUALSYNC_VERSION_MAJOR) "."
+           DUALSYNC_STRINGIFY(DUALSYNC_VERSION_MINOR) "."
+           DUALSYNC_STRINGIFY(DUALSYNC_VERSION_PATCH);
+}
+
