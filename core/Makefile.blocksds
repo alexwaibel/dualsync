@@ -12,7 +12,9 @@ OBJECTS := $(patsubst source/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
 ARCH := -mthumb -mcpu=arm946e-s+nofp
 SPECS := $(BLOCKSDS)/sys/crts/ds_arm9.specs
-CFLAGS := -std=c11 -Wall -Wextra -Werror -Os \
+WARNING_FLAGS := -Wall -Wconversion -Werror -Wextra -Wpedantic -Wshadow \
+	-Wstrict-prototypes
+CFLAGS := -std=c11 $(WARNING_FLAGS) -Os \
 	-ffunction-sections -fdata-sections \
 	-Iinclude $(ARCH) -specs=$(SPECS)
 

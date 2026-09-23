@@ -8,4 +8,3 @@
 const char *dualsync_version(void);
 
 #endif
-

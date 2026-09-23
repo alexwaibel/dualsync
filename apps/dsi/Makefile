@@ -28,6 +28,7 @@ NAME := dualsync-dsi
 GAME_TITLE := DualSync
 GAME_SUBTITLE := RomM client
 GAME_AUTHOR := DualSync contributors
+CFLAGS := -Werror -Wextra -Wpedantic -Wshadow -Wstrict-prototypes
 
 SOURCEDIRS := $(APP_ROOT)/source
 INCLUDEDIRS := $(CORE_ROOT)/include

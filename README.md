@@ -32,3 +32,19 @@ make test
 
 The DSi build is written to `build/dist/dsi/dualsync-dsi.nds`. Intermediate
 files used for incremental builds and debugging remain under `build/obj/`.
+
+## Development checks
+
+Formatting follows an LLVM-derived C style with four-space indentation, Allman
+braces, and a 100-column limit.
+
+```bash
+make format        # Format C sources and headers
+make format-check  # Verify formatting without changing files
+make lint          # Run static analysis
+make test          # Run portable core tests with sanitizers
+make check         # Run all checks and build the DSi application
+```
+
+These commands run through project containers and do not require host-installed
+C development tools.

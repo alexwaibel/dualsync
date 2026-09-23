@@ -1,8 +1,7 @@
-#include <stdio.h>
+#include "dualsync/version.h"
 
 #include <nds.h>
-
-#include "dualsync/version.h"
+#include <stdio.h>
 
 int main(void)
 {
@@ -25,4 +24,3 @@ int main(void)
 
     return 0;
 }
-
