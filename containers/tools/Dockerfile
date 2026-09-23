@@ -8,6 +8,7 @@ RUN apt-get update \
         cmake \
         cppcheck \
         libc6-dev \
+        libcmocka-dev \
         libclang-rt-16-dev \
         ninja-build \
     && apt-get clean \

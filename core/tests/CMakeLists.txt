@@ -1,3 +1,15 @@
+find_package(cmocka CONFIG REQUIRED)
+
+if(NOT TARGET cmocka::cmocka)
+    add_library(cmocka::cmocka UNKNOWN IMPORTED)
+    set_target_properties(
+        cmocka::cmocka
+        PROPERTIES
+            IMPORTED_LOCATION "${CMOCKA_LIBRARY}"
+            INTERFACE_INCLUDE_DIRECTORIES "${CMOCKA_INCLUDE_DIR}"
+    )
+endif()
+
 add_executable(
     dualsync_core_tests
     test_version.c
@@ -6,6 +18,7 @@ add_executable(
 target_link_libraries(
     dualsync_core_tests
     PRIVATE
+        cmocka::cmocka
         dualsync_core
 )
 

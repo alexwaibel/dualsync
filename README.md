@@ -54,7 +54,8 @@ braces, and a 100-column limit.
 
 These commands run through project containers and do not require host-installed
 C development tools. CMake is the sole build definition; Docker Compose selects
-the appropriate host or console toolchain.
+the appropriate host or console toolchain. Portable-core unit tests use cmocka
+and are registered with CTest.
 
 To enable the repository's pre-commit formatting check for the current clone:
 

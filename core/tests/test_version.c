@@ -1,10 +1,25 @@
 #include "dualsync/version.h"
 
-#include <assert.h>
-#include <string.h>
+// cmocka requires these standard library types to be declared first.
+// clang-format off
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
+// clang-format on
+
+static void version_matches_project_version(void **state)
+{
+    (void)state;
+
+    assert_string_equal(dualsync_version(), "0.1.0");
+}
 
 int main(void)
 {
-    assert(strcmp(dualsync_version(), "0.1.0") == 0);
-    return 0;
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(version_matches_project_version),
+    };
+
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
