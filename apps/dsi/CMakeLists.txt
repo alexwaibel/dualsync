@@ -40,6 +40,7 @@ find_library(
 add_executable(
     dualsync_dsi
     source/main.c
+    source/network_probe.c
 )
 
 set_target_properties(
@@ -58,6 +59,18 @@ target_link_libraries(
         "${MBEDX509_LIBRARY}"
         "${MBEDCRYPTO_LIBRARY}"
         "${ZLIB_LIBRARY}"
+)
+
+set(
+    DUALSYNC_PROBE_URL
+    "https://demo.romm.app/api/heartbeat"
+    CACHE STRING
+    "Full RomM heartbeat URL for the DSi transport probe"
+)
+target_compile_definitions(
+    dualsync_dsi
+    PRIVATE
+        DUALSYNC_PROBE_URL="${DUALSYNC_PROBE_URL}"
 )
 
 dualsync_enable_warnings(dualsync_dsi)

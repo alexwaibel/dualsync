@@ -27,6 +27,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "DUALSYNC_PROBE_URL": "$env{DUALSYNC_PROBE_URL}",
         "NDS_ARCH_THUMB": true
       }
     }

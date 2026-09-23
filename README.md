@@ -38,6 +38,17 @@ Docker is the only host dependency.
 The DSi build is written to `build/dist/dsi/dualsync-dsi.nds`. Intermediate
 files used for incremental builds and debugging remain under `build/obj/`.
 
+The current Phase 0 build probes the public RomM demo heartbeat over verified
+HTTPS by default. Override it with a full heartbeat URL to test another server:
+
+```bash
+DUALSYNC_PROBE_URL=https://romm.example.com/api/heartbeat ./scripts/dualsync dsi
+```
+
+The probe uses the embedded ISRG Root X1 and X2 certificates for Let's Encrypt
+servers. It requires DSi mode and a network configured in the console's system
+settings.
+
 ## Development checks
 
 Formatting follows an LLVM-derived C style with four-space indentation, Allman
