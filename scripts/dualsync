@@ -59,8 +59,22 @@ case "$command" in
         run_tools cmake --preset host
         run_tools cmake --build --preset host-tidy
         ;;
+    versions)
+        run_tools sh -lc '
+            clang-16 --version | head -n 1
+            cmake --version | head -n 1
+            ninja --version
+            cppcheck --version
+        '
+        run_dsi sh -lc '
+            "$WONDERFUL_TOOLCHAIN/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc" \
+                --version | head -n 1
+            wf-pacman -Q blocksds-libcurl blocksds-mbedtls \
+                toolchain-gcc-arm-none-eabi-zlib
+        '
+        ;;
     *)
-        echo "Usage: $0 {check|clean|dsi|format|format-check|install-hooks|lint|test|tidy}" >&2
+        echo "Usage: $0 {check|clean|dsi|format|format-check|install-hooks|lint|test|tidy|versions}" >&2
         exit 2
         ;;
 esac

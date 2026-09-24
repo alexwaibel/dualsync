@@ -68,6 +68,18 @@ C development tools. CMake is the sole build definition; Docker Compose selects
 the appropriate host or console toolchain. Portable-core unit tests use cmocka
 and are registered with CTest.
 
+The development containers pin their base-image digests and direct package
+versions. Builds do not perform implicit package upgrades. To report the active
+host and DSi toolchain versions:
+
+```bash
+./scripts/dualsync versions
+```
+
+Dependabot checks the pinned Docker images and GitHub Actions weekly. Package
+version changes are reviewed and validated through the normal project checks
+instead of being applied during unrelated builds.
+
 To enable the repository's pre-commit formatting check for the current clone:
 
 ```bash
