@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "DualSync: Configure IntelliSense",
+      "type": "shell",
+      "command": "./scripts/dualsync configure",
+      "problemMatcher": []
+    },
+    {
+      "label": "DualSync: Build DSi ROM",
+      "type": "shell",
+      "command": "./scripts/dualsync dsi",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "DualSync: Build host tests",
+      "type": "shell",
+      "command": "./scripts/dualsync host",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "DualSync: Test",
+      "type": "shell",
+      "command": "./scripts/dualsync test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "DualSync: Check",
+      "type": "shell",
+      "command": "./scripts/dualsync check",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "DualSync: Format",
+      "type": "shell",
+      "command": "./scripts/dualsync format",
+      "problemMatcher": []
+    },
+    {
+      "label": "DualSync: Format check",
+      "type": "shell",
+      "command": "./scripts/dualsync format-check",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "DualSync: Lint",
+      "type": "shell",
+      "command": "./scripts/dualsync lint",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "DualSync: Clang tidy",
+      "type": "shell",
+      "command": "./scripts/dualsync tidy",
+      "problemMatcher": "$gcc"
+    }
+  ]
+}

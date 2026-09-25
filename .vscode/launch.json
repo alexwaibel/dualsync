@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug host tests",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/obj/host/core/tests/dualsync_core_tests",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "DualSync: Build host tests"
+    }
+  ]
+}

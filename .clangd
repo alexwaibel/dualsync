@@ -1,0 +1,8 @@
+CompileFlags:
+  CompilationDatabase: build/obj/host
+
+---
+If:
+  PathMatch: apps/dsi/.*
+CompileFlags:
+  CompilationDatabase: build/obj/dsi

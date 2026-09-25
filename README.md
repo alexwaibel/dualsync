@@ -26,11 +26,10 @@ Platform APIs must not be included from `core/`. Each application compiles the
 core with its own target toolchain and supplies networking, filesystem, clock,
 input, and UI implementations.
 
-## Build
+## Development environment
 
-### Host requirements
-
-The recommended environment uses Visual Studio Code Dev Containers and requires:
+The Dev Container is the canonical development and CI environment. Using it
+requires:
 
 - Git
 - Docker Engine or Docker Desktop
@@ -39,20 +38,60 @@ The recommended environment uses Visual Studio Code Dev Containers and requires:
   packages are not already cached
 
 Open the repository in Visual Studio Code and select **Dev Containers: Reopen in
-Container**. The editor, terminals, CMake integration, host analysis tools, and
-BlocksDS toolchain then run in the same versioned environment used by CI.
+Container**. This provides the same CMake, host analysis tools, and BlocksDS
+toolchain used by CI. No host compiler, CMake installation, BlocksDS SDK, GitHub
+CLI, or development libraries are required.
 
-To run the project commands directly from the host instead, also install Docker
-Compose v2, available as `docker compose`, and use a POSIX-compatible shell:
+On Windows, use Docker Desktop with Dev Containers or run the command-line
+workflow through WSL.
+
+### Visual Studio Code
+
+Container creation configures both CMake presets and installs the repository's
+Git hooks. The workspace also provides:
+
+- clangd indexing and clang-tidy diagnostics for host and DSi sources
+- clang-format on save for C files
+- tasks for building, formatting, analysis, tests, and complete checks
+- CodeLLDB debugging for the portable-core tests
+
+Use **Run Build Task** to build the DSi ROM, **Tasks: Run Task** for other
+workflows, and **Debug host tests** to launch the unit tests under CodeLLDB.
+After changing CMake build definitions, run **DualSync: Configure IntelliSense**
+to refresh both compilation databases.
+
+### Command-line workflow
+
+The `scripts/dualsync` entry point runs directly inside the Dev Container. From
+a POSIX-compatible host shell, it starts the same environment through Docker
+Compose v2:
 
 ```bash
 ./scripts/dualsync dsi
 ./scripts/dualsync test
 ```
 
-No host C compiler, CMake installation, BlocksDS SDK, GitHub CLI, or development
-libraries are required. On Windows, use Docker Desktop with Dev Containers or
-run the CLI workflow through WSL.
+Available commands:
+
+- `configure`: generate the host and DSi compilation databases
+- `dsi`: build the DSi ROM
+- `host`: build the portable-core test executable
+- `test`: run host formatting, analysis, and unit tests
+- `check`: run all host checks and build the DSi ROM
+- `format` / `format-check`: apply or verify C formatting
+- `lint` / `tidy`: run cppcheck or clang-tidy
+- `clean`: remove generated build artifacts
+- `versions`: report the active host and DSi toolchain versions
+- `install-hooks`: configure the pre-commit hook outside the Dev Container
+
+Formatting follows an LLVM-derived C style with four-space indentation, Allman
+braces, and a 100-column limit. CMake is the sole build definition, and
+portable-core unit tests use cmocka through CTest.
+
+The pre-commit hook checks formatting without modifying staged files. Hooks can
+be bypassed, so CI always runs the complete check independently.
+
+## DSi build
 
 The DSi build is written to `build/dist/dsi/dualsync-dsi.nds`. Intermediate
 files used for incremental builds and debugging remain under `build/obj/`.
@@ -68,37 +107,14 @@ The probe uses the embedded ISRG Root X1 and X2 certificates for Let's Encrypt
 servers. It requires DSi mode and a network configured in the console's system
 settings.
 
-## Development checks
+## Reproducibility and CI
 
-Formatting follows an LLVM-derived C style with four-space indentation, Allman
-braces, and a 100-column limit.
-
-```bash
-./scripts/dualsync format
-./scripts/dualsync format-check
-./scripts/dualsync lint
-./scripts/dualsync tidy
-./scripts/dualsync test
-./scripts/dualsync check
-```
-
-Inside the Dev Container these commands run directly. From the host they
-automatically start the same environment through Docker Compose. CMake is the
-sole build definition, and portable-core unit tests use cmocka through CTest.
-
-The development image pins its base-image digest and direct package versions.
-Builds do not perform implicit package upgrades. To report the active host and
-DSi toolchain versions:
-
-```bash
-./scripts/dualsync versions
-```
-
-The image currently builds on the official BlocksDS `slim` image to reuse its
-maintained Wonderful and BlocksDS installation. This is a bootstrap choice, not
-a platform boundary. When 3DS development begins, the official devkitPro
-toolchain will be installed alongside Wonderful under its separate
-`/opt/devkitpro` prefix so the same Dev Container supports both applications.
+The development image pins its base-image digest and direct package versions;
+builds do not perform implicit upgrades. It currently uses the official
+BlocksDS `slim` image for its maintained Wonderful and BlocksDS installation.
+This is a bootstrap choice, not a platform boundary. When 3DS development
+begins, devkitPro will be installed under its separate `/opt/devkitpro` prefix
+so one container can support both applications.
 
 Dependabot checks the pinned Docker images and GitHub Actions weekly. Package
 version changes are reviewed and validated through the normal project checks
@@ -116,12 +132,3 @@ only then publishes commit-specific and moving `cache` tags. The cached image
 also preserves successfully built package layers if an upstream package later
 becomes unavailable. The GHCR package should be public so local builds and CI
 can use it without registry credentials.
-
-To enable the repository's pre-commit formatting check for the current clone:
-
-```bash
-./scripts/dualsync install-hooks
-```
-
-The hook checks formatting without modifying staged files. Git hooks can be
-bypassed, so CI runs the complete check independently.

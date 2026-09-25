@@ -37,6 +37,12 @@ case "$command" in
     clean)
         rm -rf "$PROJECT_ROOT/build"
         ;;
+    configure)
+        run_dev sh -lc '
+            cmake --preset host
+            cmake --preset dsi
+        '
+        ;;
     dsi)
         run_dev cmake --workflow --preset dsi
         ;;
@@ -62,6 +68,12 @@ case "$command" in
         git -C "$PROJECT_ROOT" config core.hooksPath .githooks
         echo "Configured Git hooks from .githooks"
         ;;
+    host)
+        run_dev sh -lc '
+            cmake --preset host
+            cmake --build --preset host --target dualsync_core_tests
+        '
+        ;;
     test)
         run_dev cmake --workflow --preset host-check
         ;;
@@ -84,7 +96,7 @@ case "$command" in
         '
         ;;
     *)
-        echo "Usage: $0 {check|clean|dsi|format|format-check|install-hooks|lint|test|tidy|versions}" >&2
+        echo "Usage: $0 {check|clean|configure|dsi|format|format-check|host|install-hooks|lint|test|tidy|versions}" >&2
         exit 2
         ;;
 esac
