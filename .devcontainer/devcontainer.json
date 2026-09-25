@@ -21,7 +21,8 @@
         "editorconfig.editorconfig",
         "github.vscode-github-actions",
         "llvm-vs-code-extensions.vscode-clangd",
-        "ms-vscode.cmake-tools"
+        "ms-vscode.cmake-tools",
+        "stkb.rewrap"
       ]
     }
   }

@@ -1,4 +1,7 @@
 {
-  "cmake.configureOnOpen": false
+  "cmake.configureOnOpen": false,
+  "[markdown]": {
+    "editor.rulers": [100],
+    "rewrap.autoWrap.enabled": true
+  }
 }
-
