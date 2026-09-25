@@ -18,10 +18,15 @@ RUN apt-get update \
         ninja-build=1.11.1-2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && wf-pacman -S --noconfirm \
-        toolchain-gcc-arm-none-eabi-zlib=1.3.2-1 \
-        blocksds-mbedtls=3.6.4-2 \
-        blocksds-libcurl=8.16.0-2 \
+    && for attempt in 1 2 3; do \
+        wf-pacman -S --noconfirm \
+            toolchain-gcc-arm-none-eabi-zlib=1.3.2-1 \
+            blocksds-mbedtls=3.6.4-2 \
+            blocksds-libcurl=8.16.0-2 \
+        && break; \
+        if [ "$attempt" -eq 3 ]; then exit 1; fi; \
+        sleep $((attempt * 10)); \
+    done \
     && wf-config clean-caches --all
 
 WORKDIR /work
