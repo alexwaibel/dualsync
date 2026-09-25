@@ -14,9 +14,9 @@ The project is in its hardware-prototyping phase. See
 ## Repository layout
 
 ```text
+.devcontainer/ Canonical development and CI environment
 apps/         Platform-specific applications
 build/        Generated build and distribution artifacts
-containers/   Isolated target build environments
 core/         Portable RomM and save-sync logic
 docs/         Project planning and design documentation
 scripts/      Developer workflow entry points
@@ -28,12 +28,31 @@ input, and UI implementations.
 
 ## Build
 
-Docker is the only host dependency.
+### Host requirements
+
+The recommended environment uses Visual Studio Code Dev Containers and requires:
+
+- Git
+- Docker Engine or Docker Desktop
+- Visual Studio Code with the Dev Containers extension
+- Internet access when building an environment whose image layers or pinned
+  packages are not already cached
+
+Open the repository in Visual Studio Code and select **Dev Containers: Reopen in
+Container**. The editor, terminals, CMake integration, host analysis tools, and
+BlocksDS toolchain then run in the same versioned environment used by CI.
+
+To run the project commands directly from the host instead, also install Docker
+Compose v2, available as `docker compose`, and use a POSIX-compatible shell:
 
 ```bash
 ./scripts/dualsync dsi
 ./scripts/dualsync test
 ```
+
+No host C compiler, CMake installation, BlocksDS SDK, GitHub CLI, or development
+libraries are required. On Windows, use Docker Desktop with Dev Containers or
+run the CLI workflow through WSL.
 
 The DSi build is written to `build/dist/dsi/dualsync-dsi.nds`. Intermediate
 files used for incremental builds and debugging remain under `build/obj/`.
@@ -63,22 +82,40 @@ braces, and a 100-column limit.
 ./scripts/dualsync check
 ```
 
-These commands run through project containers and do not require host-installed
-C development tools. CMake is the sole build definition; Docker Compose selects
-the appropriate host or console toolchain. Portable-core unit tests use cmocka
-and are registered with CTest.
+Inside the Dev Container these commands run directly. From the host they
+automatically start the same environment through Docker Compose. CMake is the
+sole build definition, and portable-core unit tests use cmocka through CTest.
 
-The development containers pin their base-image digests and direct package
-versions. Builds do not perform implicit package upgrades. To report the active
-host and DSi toolchain versions:
+The development image pins its base-image digest and direct package versions.
+Builds do not perform implicit package upgrades. To report the active host and
+DSi toolchain versions:
 
 ```bash
 ./scripts/dualsync versions
 ```
 
+The image currently builds on the official BlocksDS `slim` image to reuse its
+maintained Wonderful and BlocksDS installation. This is a bootstrap choice, not
+a platform boundary. When 3DS development begins, the official devkitPro
+toolchain will be installed alongside Wonderful under its separate
+`/opt/devkitpro` prefix so the same Dev Container supports both applications.
+
 Dependabot checks the pinned Docker images and GitHub Actions weekly. Package
 version changes are reviewed and validated through the normal project checks
 instead of being applied during unrelated builds.
+
+The same Dev Container is prebuilt as
+`ghcr.io/alexwaibel/dualsync-devcontainer`. CI builds the checked-out
+`.devcontainer` definition and runs the complete checks inside it, using the
+published `cache` image only as a BuildKit cache. Source files and tests always
+come from the commit or pull request being checked.
+
+Pull requests never publish images. When the Dev Container definition changes
+on `main`, a separate trusted workflow builds it, runs the complete checks, and
+only then publishes commit-specific and moving `cache` tags. The cached image
+also preserves successfully built package layers if an upstream package later
+becomes unavailable. The GHCR package should be public so local builds and CI
+can use it without registry credentials.
 
 To enable the repository's pre-commit formatting check for the current clone:
 

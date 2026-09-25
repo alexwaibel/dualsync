@@ -1,0 +1,28 @@
+{
+  "name": "DualSync",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "options": [
+      "--cache-from=ghcr.io/alexwaibel/dualsync-devcontainer:cache"
+    ]
+  },
+  "workspaceFolder": "/work",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/work,type=bind",
+  "remoteUser": "ubuntu",
+  "updateRemoteUserUID": true,
+  "containerEnv": {
+    "DUALSYNC_IN_CONTAINER": "1",
+    "DUALSYNC_PROBE_URL": "https://demo.romm.app/api/heartbeat"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "editorconfig.editorconfig",
+        "github.vscode-github-actions",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cmake-tools"
+      ]
+    }
+  }
+}

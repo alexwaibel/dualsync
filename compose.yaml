@@ -1,24 +1,15 @@
 services:
-  dsi:
+  dev:
     build:
       context: .
-      dockerfile: containers/dsi/Dockerfile
-    image: dualsync-dsi-dev
+      dockerfile: .devcontainer/Dockerfile
+      cache_from:
+        - ghcr.io/alexwaibel/dualsync-devcontainer:cache
+    image: dualsync-devcontainer
     init: true
     environment:
+      DUALSYNC_IN_CONTAINER: "1"
       DUALSYNC_PROBE_URL: "${DUALSYNC_PROBE_URL:-https://demo.romm.app/api/heartbeat}"
-    user: "${DUALSYNC_UID:-1000}:${DUALSYNC_GID:-1000}"
-    volumes:
-      - .:/work
-    working_dir: /work
-
-  tools:
-    build:
-      context: .
-      dockerfile: containers/tools/Dockerfile
-    image: dualsync-tools-dev
-    init: true
-    user: "${DUALSYNC_UID:-1000}:${DUALSYNC_GID:-1000}"
     volumes:
       - .:/work
     working_dir: /work

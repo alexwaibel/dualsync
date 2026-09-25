@@ -1,14 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: docker
-    directory: /containers/tools
-    schedule:
-      interval: weekly
-    labels:
-      - dependencies
-
-  - package-ecosystem: docker
-    directory: /containers/dsi
+    directory: /.devcontainer
     schedule:
       interval: weekly
     labels:

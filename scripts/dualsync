@@ -13,60 +13,70 @@ compose()
     docker compose --project-directory "$PROJECT_ROOT" -f "$PROJECT_ROOT/compose.yaml" "$@"
 }
 
-run_tools()
+run_dev()
 {
-    compose run --no-TTY --rm --build tools "$@"
-}
-
-run_dsi()
-{
-    compose run --no-TTY --rm --build dsi "$@"
+    if [ "${DUALSYNC_IN_CONTAINER:-0}" = "1" ]; then
+        "$@"
+    else
+        compose run --no-TTY --rm --build \
+            --user "$DUALSYNC_UID:$DUALSYNC_GID" \
+            --env HOME=/tmp \
+            dev "$@"
+    fi
 }
 
 command=${1:-}
 
 case "$command" in
     check)
-        run_tools cmake --workflow --preset host-check
-        run_dsi cmake --workflow --preset dsi
+        run_dev sh -lc '
+            cmake --workflow --preset host-check
+            cmake --workflow --preset dsi
+        '
         ;;
     clean)
         rm -rf "$PROJECT_ROOT/build"
         ;;
     dsi)
-        run_dsi cmake --workflow --preset dsi
+        run_dev cmake --workflow --preset dsi
         ;;
     format)
-        run_tools cmake --preset host
-        run_tools cmake --build --preset host-format
+        run_dev sh -lc '
+            cmake --preset host
+            cmake --build --preset host-format
+        '
         ;;
     format-check)
-        run_tools cmake --preset host
-        run_tools cmake --build --preset host-format-check
+        run_dev sh -lc '
+            cmake --preset host
+            cmake --build --preset host-format-check
+        '
         ;;
     lint)
-        run_tools cmake --preset host
-        run_tools cmake --build --preset host-lint
+        run_dev sh -lc '
+            cmake --preset host
+            cmake --build --preset host-lint
+        '
         ;;
     install-hooks)
         git -C "$PROJECT_ROOT" config core.hooksPath .githooks
         echo "Configured Git hooks from .githooks"
         ;;
     test)
-        run_tools cmake --workflow --preset host-check
+        run_dev cmake --workflow --preset host-check
         ;;
     tidy)
-        run_tools cmake --preset host
-        run_tools cmake --build --preset host-tidy
+        run_dev sh -lc '
+            cmake --preset host
+            cmake --build --preset host-tidy
+        '
         ;;
     versions)
-        run_tools sh -lc '
+        run_dev sh -lc '
             clang-16 --version | head -n 1
             cmake --version | head -n 1
             ninja --version
             cppcheck --version
-        '
-        run_dsi sh -lc '
             "$WONDERFUL_TOOLCHAIN/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc" \
                 --version | head -n 1
             wf-pacman -Q blocksds-libcurl blocksds-mbedtls \
