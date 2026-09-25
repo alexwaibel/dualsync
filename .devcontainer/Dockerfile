@@ -16,6 +16,7 @@ RUN apt-get update \
         libcmocka-dev=1.1.7-3 \
         libclang-rt-16-dev=1:16.0.6-23ubuntu4 \
         ninja-build=1.11.1-2 \
+        openssh-client=1:9.6p1-3ubuntu13.19 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && for attempt in 1 2 3; do \
